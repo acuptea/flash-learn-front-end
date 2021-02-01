@@ -1,0 +1,117 @@
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		*{
+			box-sizing: border-box;
+		}
+	</style>
+</head>
+<body>
+	<div style="padding:20px;border: 1px solid #ccc;width: 300px;float: right;">
+            测试Body是一个BFC吗
+        </div>
+        <div style="padding:20px;border: 1px solid #eee;width: 500px;">
+        	<div style="padding:20px;border: 1px solid #ccc;width: 300px;float: right;">222222222</div>
+        </div>
+
+        <script>
+    
+        
+
+
+        function ajax(xhrConfig){
+            let xhr = new XMLHttpRequest()
+
+            xhr.onerror = function() {}
+            xhr.timeout = 5000
+
+            xhr.onreadystatechange = function () {
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    console.log('ok')
+                }
+            }
+
+            xhr.setRequestHeader('Content-type','json')
+            xhr.open(xhrConfig.method,xhrConfig.url,true)
+            xhr.send()
+        }
+
+        function isLegal(str){
+            str = str.trim()
+            if(!str) return false
+
+            let stack = []
+            let getLeftChar = {
+                ']':'[',
+                '}':'{',
+                ')': '('
+            }
+
+            while(str){
+                if(str[0] == '[' || str[0] == '{' || str[0] == '('){
+                    stack.push(str[0])
+                } else {
+                   if(stack.length && stack[stack.length -1] == getLeftChar[str[0]]){
+                    stack.pop()
+                   } else {
+                    return false
+                   }
+                }
+            }
+
+            return !stack.length
+        }
+
+
+        function test(argc,argv){
+            let i = 0
+            let arr = new Array(3)
+            arr[3] = 0
+
+            for(;i<=3;i++){
+                arr[i] = 0
+                console.log('hello world')
+            }
+        }
+
+        test()
+
+        function myPromise(excutor){
+            this.status = 'pending'
+            this.value = ''
+            this.reason = ''
+        }
+
+
+
+function* genDemo() {
+    console.log("开始执行第一段")
+    yield 'generator 2'
+
+    console.log("开始执行第二段")
+    yield 'generator 2'
+
+    console.log("开始执行第三段")
+    yield 'generator 2'
+
+    console.log("执行结束")
+    return 'generator 2'
+}
+
+// console.log('main 0')
+// let gen = genDemo()
+// console.log(gen.next().value)  // generator 2
+// console.log('main 1')
+// console.log(gen.next().value)
+// console.log('main 2')
+// console.log(gen.next().value)
+// console.log('main 3')
+// console.log(gen.next().value)
+// console.log('main 4')
+				
+        </script>
+</body>
+</html>

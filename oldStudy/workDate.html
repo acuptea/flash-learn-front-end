@@ -1,0 +1,224 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	<style>
+		*{
+			padding: 0;
+			margin: 0;
+		}
+		#app{
+			background-color: #f0f0f0;
+			padding: 20px;
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+			font-size: 18px;
+		}
+		.el-table__empty-block{
+			height: 60px!important;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<!-- <p style="margin-bottom: 30px;">当前循序： 杨、冉、邓,李排班2次</p> -->
+		<div>
+			<span>选择月份：</span>
+			<el-date-picker
+		      v-model="value2"
+		      type="month"
+		      placeholder="选择月">
+		  </el-date-picker>
+		</div>
+		<el-button type="primary" @click="handleSearch">查询</el-button>
+	
+		<el-table
+      :data="tableData"
+      style="width: 80%;margin-top: 30px;">
+      <el-table-column prop="1" label="星期一">
+      	<template  slot-scope="scope">
+      		<div >{{scope.row['1'].day}}</div>
+      		<div v-if="scope.row['1'].person">值班人：{{scope.row['1'].person}}</div>
+      	</template>
+      </el-table-column>
+      <el-table-column prop="2" label="星期二">
+      	<template slot-scope="scope">
+      		<div  >{{scope.row['2'].day}}</div>
+      		<div v-if="scope.row['2'].person">值班人：{{scope.row['2'].person}}</div>
+      	</template>
+      </el-table-column>
+      <el-table-column prop="3" label="星期三">
+      	<template slot-scope="scope">
+      		<div >{{scope.row['3'].day}}</div>
+      		<div v-if="scope.row['3'].person">值班人：{{scope.row['3'].person}}</div>
+      	</template>
+      </el-table-column>
+      <el-table-column prop="4" label="星期四">
+      	<template slot-scope="scope">
+      		<div >{{scope.row['4'].day}}</div>
+      		<div v-if="scope.row['4'].person">值班人：{{scope.row['4'].person}}</div>
+      	</template>
+      </el-table-column>
+      <el-table-column prop="5" label="星期五">
+      	<template slot-scope="scope">
+      		<div >{{scope.row['5'].day}}</div>
+      		<div v-if="scope.row['5'].person">值班人：{{scope.row['5'].person}}</div>
+      	</template>
+      </el-table-column>
+      <el-table-column prop="6" label="星期六">
+      	<template slot-scope="scope">
+      		<div >{{scope.row['6'].day}}</div>
+      		<div v-if="scope.row['6'].person">值班人：{{scope.row['6'].person}}</div>
+      	</template>
+      </el-table-column>
+      <el-table-column prop="7" label="星期天">
+      	<template slot-scope="scope">
+      		<div >{{scope.row['7'].day}}</div>
+      		<div v-if="scope.row['7'].person">值班人：{{scope.row['7'].person}}</div>
+      	</template>
+      </el-table-column>
+    </el-table>
+	</div>
+	<script>
+		var app = new Vue({
+		  el: '#app',
+		  data: {
+		  	value2:'',
+		  	tableData:[],
+		  	allData:[],
+		    message: '页面加载于 ' + new Date().toLocaleString(),
+        fromDay:new Date('2020/11/25 00:00:00')
+		  },
+		  methods:{
+		  	// 直接计算1000天的 然后从里面取
+		  	getData:function(){
+          var arr1 = ['冉','邓','杨']
+		  		// var arr1 = ['冉碧琴','邓勇','杨忠兰']
+          var arr2 = ['李']
+		  		// var arr2 = ['李骏']
+
+		  		var flag1 =0
+		  		var index = 0
+
+          for(let i = 0;i<1000;i++) {
+            if(flag1 < 2) {
+              this.allData.push(arr1[index])
+              if(index <2) {
+                index++
+              } else {
+                index = 0
+              }
+              flag1++
+            } else {
+              this.allData.push(arr2[0])
+              flag1 = 0
+            }
+          }
+
+
+          // const tempArr = ['冉碧琴','邓勇','李骏','杨忠兰','李骏']
+
+          // var activeIdx = 0
+          // for(let i = 0;i<1000;i++) {
+          //   this.allData.push(tempArr[activeIdx])
+          //   if(activeIdx < 4) {
+          //     activeIdx++
+          //   } else {
+          //     activeIdx = 0
+          //   }
+          // }
+
+          console.log(this.allData)
+		  	},
+		  	getCurrentData(value){
+		  		this.tableData = []
+          const today = value || new Date()
+          const year = today.getFullYear()
+		  		const month = today.getMonth()+1
+          // 当前月份的天数
+		  		var curCount = this.getCountDays(new Date(`${year}/${month}/1`))
+
+
+          let gap = 0
+          var monthFirstDay = new Date(`${year}/${month}/1 00:00:00`)
+          if( monthFirstDay > this.fromDay ) {
+            gap = parseInt(monthFirstDay.getTime() - this.fromDay.getTime())/(1000*60*60*24)
+          }
+
+          console.log('gap：' + gap)
+
+          let tableDataBefore = []
+          let activeIdx = 0
+          for(let i = 0;i<curCount;i++) {
+            if(new Date(`${year}/${month}/${i+1} 00:00:00`) < this.fromDay) {
+              tableDataBefore.push({
+                day: i+1,
+                person:''
+              })
+            } else {
+              tableDataBefore.push({
+                day:i+1 ,
+                person:this.allData[activeIdx+gap]
+              })
+              activeIdx++
+            }
+          }
+
+		  		let flag = 0
+           // 星期天是0  其余是1-6
+          var monthFirstDayWeekStart = monthFirstDay.getDay() === 0 ? 6 : monthFirstDay.getDay() -1
+          
+		  		for(let i = 0;i<6;i++){
+		  			let item = {}
+		  			for(let j = 0;j<7;j++){
+              if(i === 0) {
+                if(j < monthFirstDayWeekStart) {
+                  item[j +1] = {
+                    day: '',
+                    person:''
+                  }
+                } else {
+                  item[j+1] = tableDataBefore[ i*7 + j - monthFirstDayWeekStart ]
+                }
+              } else {
+                item[j+1] = tableDataBefore[ i*7 + j - monthFirstDayWeekStart ] || {
+                  day:'',
+                  person:''
+                }
+              }
+		  			}
+            this.tableData.push(item)
+		  		}
+          console.log(this.tableData)
+		  	},
+		  	handleSearch:function(){
+		  		this.getCurrentData(this.value2)
+		  	},
+		  	getCountDays:function(oDate) {
+	          var curDate = oDate;
+	          /* 获取当前月份 */
+	          var curMonth = curDate.getMonth();
+	         /*  生成实际的月份: 由于curMonth会比实际月份小1, 故需加1 */
+	         curDate.setMonth(curMonth + 1);
+	         /* 将日期设置为0, 这里为什么要这样设置, 我不知道原因, 这是从网上学来的 */
+	         curDate.setDate(0);
+	         /* 返回当月的天数 */
+	        return curDate.getDate();
+				}
+		  },
+		  mounted: function(){
+		  	// console.log(this.getCountDays())
+		  // 	var deviceWidth = document.documentElement.clientWidth;
+				// if(deviceWidth > 750) deviceWidth = 750;
+				// document.documentElement.style.fontSize = deviceWidth / 7.5 + 'px'
+		  	
+		  	this.getData()
+		  }
+		})
+	</script>
+</body>
+</html>

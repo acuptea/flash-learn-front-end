@@ -1,0 +1,168 @@
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		.xuni-container  tr{
+			height: 40px;
+			line-height: 40px;
+			box-sizing: border-box;
+		}
+		.xuni-container {
+			width: 100%;
+			/*will-change: transform;*/
+		}
+
+		.xuni-outer{
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			z-index: -1;
+		}
+
+		.xuni-container {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+		}
+	</style>
+	<!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		// for(let i = 0;i<10;i++) {
+		// 	for(let j = i;j<10;j++) {
+		// 		if(j >5) {
+		// 			break
+		// 		}
+		// 		console.log(i,j)
+		// 	}
+		// 	console.log(i)
+		// }
+	</script>
+	<script src="./rq.js"></script>
+	<button style="width: 100px;height: 100px;" id="test"></button>
+	<!-- <script src="./active.js"></script> -->
+
+	<div id="app">
+				<div ref="outer" @scroll="scrollEvent($event)" :style="{height:(pageSize*40)+'px'}" style="border: 1px solid red;width: 100%;min-height: 500px;box-sizing: border-box;overflow-y: auto;overflow-x: hidden;position: relative;">
+					<div :style="{height:outerHeight}" class="xuni-outer"></div>
+					<table :style="{transform: getTransform}" class="xuni-container">
+						<tr :key="item.no" v-for="item in activeData">
+							<td>{{item.no}}</td>
+							<td>{{item.name}}</td>
+							<td>{{item.name}}</td>
+							<td>{{item.name}}</td>
+						</tr>
+					</table>
+				</div>
+	</div>
+	<div id="testencode">
+		<table class="xuni-container">
+						<tr>
+							<td>我明文传输了</td>
+							<td>{{item.name}}</td>
+							<td>{{item.name}}</td>
+							<td>{{item.name}}</td>
+						</tr>
+					</table>
+	</div>
+	<script>
+		
+		var HtmlUtil = {
+     /*1.用浏览器内部转换器实现html转码*/
+     htmlEncode:function (html){
+         //1.首先动态创建一个容器标签元素，如DIV
+         var temp = document.createElement ("div");
+         //2.然后将要转换的字符串设置为这个元素的innerText(ie支持)或者textContent(火狐，google支持)
+         (temp.textContent != undefined ) ? (temp.textContent = html) : (temp.innerText = html);
+         //3.最后返回这个元素的innerHTML，即得到经过HTML编码转换的字符串了
+         var output = temp.innerHTML;
+         temp = null;
+         return output;
+     },
+     /*2.用浏览器内部转换器实现html解码*/
+     htmlDecode:function (text){
+         //1.首先动态创建一个容器标签元素，如DIV
+         var temp = document.createElement("div");
+         //2.然后将要转换的字符串设置为这个元素的innerHTML(ie，火狐，google都支持)
+         temp.innerHTML = text;
+        //3.最后返回这个元素的innerText(ie支持)或者textContent(火狐，google支持)，即得到经过HTML解码的字符串了。
+        var output = temp.innerText || temp.textContent;
+         temp = null;
+        return output;
+     }
+ 		}
+
+
+ 		let ele = document.getElementById('testencode')
+		console.log(ele)
+		let data = HtmlUtil.htmlEncode(ele.innerHTML)
+
+		console.log(HtmlUtil.htmlDecode(data))
+
+	</script>
+	<script>
+		/**
+		 * 虚拟滚动列表实现
+		 * 1.table的translateY = outer.scrollTop
+		 * 2.start = Math.floor(scrollTop/ 每一行的高度)
+		 * 3.Object.frezz 不让其加入响应式
+		 */
+		
+		// let vue = new Vue({
+		// 	el:'#app',
+		// 	data() {
+		// 		return {
+		// 			msg: 'm2222222222222sg',
+		// 			allList:[],
+		// 			page: 1,
+		// 			pageSize: 20,
+		// 			start: 0,
+		// 			end: null,
+		// 			startOffset: 0,
+		// 			screenHeight: 0
+		// 		}
+		// 	},
+		// 	created(){
+		// 		for(let i = 0;i<10000;i++){
+		// 			this.allList.push({
+		// 				no: i+1,
+		// 				name:'name'+(i+1)
+		// 			})
+		// 		}
+		// 	},
+		// 	mounted() {
+		// 		this.start = 0
+		// 		this.end = this.start + this.pageSize
+		// 	},
+		// 	computed:{
+		// 		activeData() {
+		// 			return this.allList.slice(this.start,this.end)
+		// 		},
+		// 		outerHeight() {
+		// 			return this.allList.length*40 + 'px'
+		// 		},
+		// 		getTransform() {
+		// 			return `translateY(${this.startOffset}px)`
+		// 		}
+		// 	},
+		// 	methods: {
+		// 		scrollEvent(e) {
+		// 			let scrollTop = this.$refs['outer'].scrollTop
+		// 			this.start = Math.floor(scrollTop / 40)
+		// 			this.end = this.start + this.pageSize
+		// 			this.startOffset = scrollTop
+		// 		}
+		// 	}
+		// })
+	</script>
+</body>
+</html>

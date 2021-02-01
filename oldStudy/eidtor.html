@@ -1,0 +1,32 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>富文本测试</title>
+  <!-- <script src="./learn20210127.js"></script> -->
+  <script src="./promise.js"></script>
+</head>
+<body>
+  <div style="width: 400px;height: 200px;border: 1px solid #eee;" contenteditable="true" id="paste-target">
+    paste here
+  </div>
+  <script>
+    const el = document.getElementById('paste-target')
+    el.addEventListener('paste',function(e){
+      // console.log(e)
+      // console.log(e.clipboardData.items.length)
+      for(let i = 0;i<e.clipboardData.items.length;i++) {
+        let item = e.clipboardData.items[i]
+        // console.log(item.getAsString())
+      }
+      let transferData = e.clipboardData.getData('text/rtf')
+      // let transferData2 = e.clipboardData.getData('text/html')
+      // console.log(transferData)
+      // console.log(transferData2)
+    })
+    // el.on('paste',function(e){
+    //   console.log(e)
+    // })
+  </script>
+</body>
+</html>
