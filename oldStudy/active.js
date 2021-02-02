@@ -82,8 +82,9 @@ function foo(a) {
 	var i = 0;
 	for (; i < 3; i++) {
 		result[i] = function () {
+      console.log(i)
 			total += i * a;
-			// console.log(total);
+			console.log(total);
 		};
 	}
 }

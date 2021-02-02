@@ -13,8 +13,8 @@
  * 事情有三个状态 pengding 等待完成中  resolve成功 reject失败
  * .then中的事情是成功后要做的事情 
  * .catch中的事情是失败后要做的事情 
- * 第一件事情或者之后的事情失败后 会被距离最近的catch拦截住错误  
- * catch不影响后面.then事情的执行 因为后面的事情是否执行是与第一件事情约定的
+ * 第一件事情或者之后的事情失败后 会被距离最近的catch拦截住错误  中间的事情就会被忽略掉  catch之后的事情不管  
+ *
  *
  * 不管是catch还是then都可以通过return返回一个值给下一个事情
  * 
@@ -23,9 +23,8 @@
  * 
  */
 
-console.log(Promise)
-
 // const promise_ = new Promise((resolve,reject)=>{
+//   console.log('同步执行的')
 //   resolve(11)
 // })
 // .then((res)=>{
@@ -33,9 +32,7 @@ console.log(Promise)
 //   return Promise.reject('后面的then执行勒妈')
 // })
 // .then((test)=>{
-//   console.log(test)
-//   console.log(222)
-//   // return Promise.reject('3333')
+//   return Promise.reject('3333')
 // })
 // .catch((err)=>{
 //   console.log(err)
@@ -68,54 +65,159 @@ function yellow() {
   console.log("yellow");
 }
 
-const light = function(time,callBack) {
-  return new Promise((resolve,reject)=>{
-    setTimeout(()=>{
-      callBack && callBack()
-      resolve()
-    },time)
+function light() {
+  let resolve = Promise.resolve().then(()=>{
+    return new Promise((resolve)=>{
+      setTimeout(()=>{
+        red()
+        resolve()
+      },3000)
+    })
+  }).then((res)=>{
+    // return new Promise((resolve,reject)=>{
+    //   setTimeout(()=>{
+    //     yellow()
+    //     reject('1111')
+    //   },2000)
+    // })
+    return Promise.reject('1111')
   })
+  .then((res)=>{
+    console.log('影响catch前面的代码执行吗')
+    return new Promise((resolve)=>{
+      console.log('这个和疑问句一起执行的')
+      setTimeout(()=>{
+        green()
+        resolve()
+      },2000)
+    })
+  })
+  .then((res)=>{
+    console.log('影响catch前面的代码执行吗22')
+  })
+  // .catch((err)=>{
+  //   console.log('捕获到了错误')
+  //   console.log(err)
+  // })
+  .then(()=>{
+    console.log('影响catch后面的代码执行吗')
+    return new Promise((resolve)=>{
+      setTimeout(()=>{
+        resolve()
+        // light()
+      },0)
+    })
+  }).catch((err)=>{
+    console.log('捕获到了错误')
+    console.log(err)
+  })
+
+  return resolve
 }
 
+// light()
 
-const step = function () {
-  Promise.resolve()
-  .then(()=>{
-    light(3000,red)
-  })
-  .then(()=>{
-    light(2000,yellow)
-  })
-  .then(()=>{
-    light(1000,green)
-  })
-  .then(()=>{
-    step()
-  })
+
+/**
+ * 设计一个简单的链式调用，要求分别在1，3，4秒后打印出”1”, “2”, “3”
+new Queue()
+.task(1000, () => {console.log(1)})
+.task(2000, () => {console.log(2)})
+.task(1000, () => {console.log(3)})
+.start()
+ */
+
+
+class Queue {
+  constructor( ) {
+    this.taskList = []
+  }
+
+  task(time,callBack) {
+    this.taskList.push({
+      time,
+      callBack
+    })
+    return this
+  }
+
+  start() {
+    let resolvedPromise = Promise.resolve()
+    for(let i = 0;i<this.taskList.length;i++) {
+      const item = this.taskList[i]
+      resolvedPromise = resolvedPromise.then(()=>{
+        return new Promise((resolve)=>{
+          setTimeout(()=>{
+            resolve(item.callBack())
+          },item.time)
+        }) 
+      })
+    }
+  }
 }
 
-step()
+// const test = new Queue()
+// .task(1000, () => {console.log(1)})
+// .task(2000, () => {console.log(2)})
+// .task(1000, () => {console.log(3)})
+// .start()
 
-// function light() {
-//   this.task = []
+
+/**
+ * promise.race promise.all
+ */
+
+class myPromise {
+  constructor() {
+    let status = '111'
+  }
+  then() {
+    console.log(status)
+    console.log(22222222222)
+  }
+}
+
+// function myPromise(fn) {
+//   let status = 'pending'
+//   let taskList = []
+//   let this.
+//   console.log(this.resolve)
+//   console.log(this.reject)
+
+//   fn(this.resolve,this.reject)
 // }
 
-// light.prototype.quene = function(time,fn) {
-//   this.task.push({
-//     time: time,
-//     fn: fn
-//   })
+// myPromise.prototype.then = function() {
+
 //   return this
 // }
+// myPromise.prototype.catch = function() {
 
-// light.prototype.start = function() {
-//   let resolve = Promise.resolve()
-//   return new Promise((resolve,reject)=>{
+//   return this
+// }
+// myPromise.prototype.resolve = function(newValue) {
+//   console.log(newValue)
+// }
+// myPromise.prototype.reject = function(newValue) {
 
-//   })
 // }
 
 
-// function lightBegin() {
 
-// }
+let testMyPromise = new myPromise((resolve,reject)=>{
+  console.log(this)
+  setTimeout(()=>{
+    resolve(222222)
+  },1000)
+}).then()
+
+// const normalPromise = new Promise((resolve,reject)=>{
+//   console.log(resolve)
+//   resolve(11,22)
+// }).then((res,res2)=>{
+//   console.log(res,res2)
+// })
+
+// new Promise((resolve,reject)=>{
+//   // 
+// })
