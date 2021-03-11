@@ -74,45 +74,29 @@ function light() {
       },3000)
     })
   }).then((res)=>{
-    // return new Promise((resolve,reject)=>{
-    //   setTimeout(()=>{
-    //     yellow()
-    //     reject('1111')
-    //   },2000)
-    // })
-    return Promise.reject('1111')
+    return new Promise((resolve,reject)=>{
+      setTimeout(()=>{
+        yellow()
+        resolve()
+      },2000)
+    })
   })
   .then((res)=>{
-    console.log('影响catch前面的代码执行吗')
     return new Promise((resolve)=>{
-      console.log('这个和疑问句一起执行的')
       setTimeout(()=>{
         green()
         resolve()
       },2000)
     })
   })
-  .then((res)=>{
-    console.log('影响catch前面的代码执行吗22')
-  })
-  // .catch((err)=>{
-  //   console.log('捕获到了错误')
-  //   console.log(err)
-  // })
   .then(()=>{
-    console.log('影响catch后面的代码执行吗')
     return new Promise((resolve)=>{
       setTimeout(()=>{
         resolve()
-        // light()
+        light()
       },0)
     })
-  }).catch((err)=>{
-    console.log('捕获到了错误')
-    console.log(err)
   })
-
-  return resolve
 }
 
 // light()

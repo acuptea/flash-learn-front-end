@@ -1,4 +1,6 @@
-
+/**
+ * 事件侦听与promise
+ */
 
 function Event() {
   this.eventBus = {}

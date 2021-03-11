@@ -863,3 +863,12 @@ var nextGreaterElement = function (nums1, nums2) {
 };
 // nextGreaterElement([2,4],[1,2,3,4])
 nextGreaterElement([4, 1, 2], [1, 3, 4, 2]);
+
+
+/**
+ *公平的洗牌算法
+ */
+
+function shuffle() {
+	
+}
