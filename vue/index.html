@@ -1,0 +1,43 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="./vue1.js"></script>
+</head>
+<body>
+  <div id="app">
+    <p>{{counter}}</p>
+    <p>{{test}}</p>
+    <h1 @click="handleClick" v-text="counter"></h1>
+    <h3>{{testValue}}</h3>
+    <input type="text" v-model="testValue">
+  </div>
+  <script>
+    const app = new Vue({
+      el:'#app',
+      data: {
+        counter: 1,
+        test:222222,
+        z: {
+          a:'aaa',
+          b:'bbbb'
+        },
+        testValue: 'testValue'
+      },
+      methods: {
+        handleClick() {
+          // this.counter++
+          this.testValue = 'eeeeee'
+        }
+      }
+    })
+    // ++app.counter
+    // app.counter = 2
+    // console.log(app.counter)
+    // setInterval(() => {
+    //   app.counter++
+    // }, 1000);
+  </script>
+</body>
+</html>
